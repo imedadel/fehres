@@ -1,5 +1,5 @@
 {
-	"name": "extension",
+	"name": "wp-extension",
 	"version": "1.0.0",
 	"description": "Spaced repetition for LeetCode",
 	"scripts": {

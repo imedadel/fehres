@@ -1,7 +1,8 @@
 {
 	"private": true,
 	"workspaces": [
-		"extension",
+		"wp-extension",
+		"fehres",
 		"site"
 	]
 }
