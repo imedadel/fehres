@@ -7,6 +7,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const WriteFilePlugin = require("write-file-webpack-plugin")
 const ZipPlugin = require("zip-webpack-plugin")
+const { postcss } = require("svelte-preprocess")
 
 // load the secrets
 const alias = {}
@@ -33,7 +34,7 @@ if (fileSystem.existsSync(secretsPath)) {
 var options = {
 	mode: "production",
 	entry: {
-		popup: path.join(__dirname, "src", "js", "popup.js"),
+		fehres: path.join(__dirname, "src", "js", "fehres.js"),
 		options: path.join(__dirname, "src", "js", "options.js"),
 		background: path.join(__dirname, "src", "js", "background.js"),
 		"content-script": path.join(__dirname, "src", "js", "content-script.js"),
@@ -44,24 +45,24 @@ var options = {
 	},
 	module: {
 		rules: [
-			{
-				test: /\.css$/,
-				exclude: /node_modules/,
-				use: [
-					{
-						loader: "style-loader",
-					},
-					{
-						loader: "css-loader",
-						options: {
-							importLoaders: 1,
-						},
-					},
-					{
-						loader: "postcss-loader",
-					},
-				],
-			},
+			// {
+			// 	test: /\.css$/,
+			// 	exclude: /node_modules/,
+			// 	use: [
+			// 		{
+			// 			loader: "style-loader",
+			// 		},
+			// 		{
+			// 			loader: "css-loader",
+			// 			// options: {
+			// 			// 	importLoaders: 1,
+			// 			// },
+			// 		},
+			// 		{
+			// 			loader: "postcss-loader",
+			// 		},
+			// 	],
+			// },
 			{
 				test: new RegExp(".(" + fileExtensions.join("|") + ")$"),
 				loader: "file-loader",
@@ -83,6 +84,9 @@ var options = {
 					options: {
 						emitCss: false,
 						hotReload: false,
+						preprocess: {
+							style: postcss(),
+						},
 					},
 				},
 			},
@@ -116,9 +120,9 @@ var options = {
 			],
 		}),
 		new HtmlWebpackPlugin({
-			template: path.join(__dirname, "src", "popup.html"),
-			filename: "popup.html",
-			chunks: ["popup"],
+			template: path.join(__dirname, "src", "fehres.html"),
+			filename: "fehres.html",
+			chunks: ["fehres"],
 		}),
 		new HtmlWebpackPlugin({
 			template: path.join(__dirname, "src", "options.html"),

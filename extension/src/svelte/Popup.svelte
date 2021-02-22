@@ -1,6 +1,7 @@
 <script>
   // import * as memory from "../js/memory.js";
   // import browser from "webextension-polyfill";
+  import Tailwind from './components/Tailwind.svelte';
   import { fade } from "svelte/transition";
   import { pageType, checkIfPaidPaddle, lookForUserInfo } from "../js/lib.js";
   import ProblemsCard from "./ProblemsCard.svelte";
