@@ -7,8 +7,6 @@
   import QuestionCard from "./QuestionCard.svelte";
   import SignUp from "./SignUp.svelte";
   import Info from "./Info.svelte";
-
-  export let name;
 </script>
 
 <style>

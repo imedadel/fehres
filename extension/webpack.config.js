@@ -2,7 +2,7 @@ const webpack = require("webpack")
 const path = require("path")
 const fileSystem = require("fs")
 const env = require("./utils/env")
-const CleanWebpackPlugin = require("clean-webpack-plugin")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 const CopyWebpackPlugin = require("copy-webpack-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const WriteFilePlugin = require("write-file-webpack-plugin")
@@ -46,13 +46,29 @@ var options = {
 		rules: [
 			{
 				test: /\.css$/,
-				loader: "style-loader!css-loader",
 				exclude: /node_modules/,
+				use: [
+					{
+						loader: "style-loader",
+					},
+					{
+						loader: "css-loader",
+						options: {
+							importLoaders: 1,
+						},
+					},
+					{
+						loader: "postcss-loader",
+					},
+				],
 			},
 			{
 				test: new RegExp(".(" + fileExtensions.join("|") + ")$"),
-				loader: "file-loader?name=[name].[ext]",
+				loader: "file-loader",
 				exclude: /node_modules/,
+				options: {
+					name: "[name].[ext]",
+				},
 			},
 			{
 				test: /\.html$/,
@@ -77,29 +93,28 @@ var options = {
 	},
 	plugins: [
 		// clean the build folder
-		new CleanWebpackPlugin(["build"]),
+		new CleanWebpackPlugin(),
 		// expose and write the allowed env vars on the compiled bundle
 		new webpack.DefinePlugin({
 			"process.env.NODE_ENV": JSON.stringify(env.NODE_ENV),
 		}),
-		new CopyWebpackPlugin([
-			{
-				from: "src/manifest.json",
-				transform: function(content, path) {
-					// generates the manifest file using the package.json informations
-					return Buffer.from(
-						JSON.stringify({
-							description: process.env.npm_package_description,
-							version: process.env.npm_package_version,
-							...JSON.parse(content.toString()),
-						})
-					)
+		new CopyWebpackPlugin({
+			patterns: [
+				{
+					from: "src/manifest.json",
+					transform: function (content) {
+						// generates the manifest file using the package.json informations
+						return Buffer.from(
+							JSON.stringify({
+								description: process.env.npm_package_description,
+								version: process.env.npm_package_version,
+								...JSON.parse(content.toString()),
+							})
+						)
+					},
 				},
-			},
-			{
-				from: "src/css/tailwind.min.css",
-			},
-		]),
+			],
+		}),
 		new HtmlWebpackPlugin({
 			template: path.join(__dirname, "src", "popup.html"),
 			filename: "popup.html",
@@ -123,7 +138,7 @@ var options = {
 
 			// OPTIONAL: defaults to the Webpack output filename (above) or,
 			// if not present, the basename of the path
-			filename: "SpacedLeet.zip",
+			filename: "Fehres.zip",
 		}),
 	],
 }
